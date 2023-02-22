@@ -7,7 +7,7 @@ export async function app(fastify: FastifyInstance, opts: AppOptions) {
   fastify.get(
     '/',
     async function (request: FastifyRequest, reply: FastifyReply) {
-      return { message: 'Hello API' };
+      return { message: 'Welcome to REST API News' };
     }
   );
 }
