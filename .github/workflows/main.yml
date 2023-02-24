@@ -1,11 +1,23 @@
 name: CI Rest News API
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   tests:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          DATABASE_URL: "postgresql://postgres:amilin@localhost:5432/news_api?schema=public"
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        
     strategy:
       matrix:
         node-version: [18.x, 16.x]
@@ -18,5 +30,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm install
         run: npm install
+      - name: migrate
+        run: npx prisma migrate dev --name init
       - name: start
         run: npm start
