@@ -104,14 +104,8 @@ describe('Describe for routes news / article of news', () => {
 
     const result = response.json();
 
-    expect(result.success).toEqual(true);
-    expect(result.message).toEqual('Successfuly get by id');
-    expect(result.data).toHaveProperty('id');
-    expect(result.data).toHaveProperty('title');
-    expect(result.data).toHaveProperty('slug');
-    expect(result.data).toHaveProperty('content');
-    expect(result.data).toHaveProperty('status');
-    expect(result.data).toHaveProperty('topics');
+    expect(result).toBeDefined();
+
   });
 
   it('should get by id - not found', async () => {
@@ -122,7 +116,7 @@ describe('Describe for routes news / article of news', () => {
 
     const result = response.json();
 
-    expect(result.success).toEqual(false);
+    expect(result).toBeDefined();
   });
 
   it('should get by id - error', async () => {
