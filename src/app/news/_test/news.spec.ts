@@ -50,9 +50,7 @@ describe('Describe for routes news / article of news', () => {
       },
     });
 
-    const result = response.json();
-    console.log(result, 'result');
-    
+    const result = response.json();    
     expect(result.success).toEqual(false);
   });
 
@@ -74,7 +72,18 @@ describe('Describe for routes news / article of news', () => {
     expect(result.data[0]).toHaveProperty('topics');
   });
 
-  it('should get by id', async () => {
+  it('should get all news - error', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: `/?status=${12322}`,
+    });
+
+    const result = response.json();
+
+    expect(result.success).toEqual(false);
+  });
+
+  it('should get by id - success', async () => {
     const response = await server.inject({
       method: 'GET',
       url: '/a483ab5c-04ae-4486-ac54-1118c2dcd304',
@@ -90,5 +99,27 @@ describe('Describe for routes news / article of news', () => {
     expect(result.data).toHaveProperty('content');
     expect(result.data).toHaveProperty('status');
     expect(result.data).toHaveProperty('topics');
+  });
+
+  it('should get by id - not found', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/a483ab5c-04ae-4486-ac54-1118c2dcd305',
+    });
+
+    const result = response.json();
+
+    expect(result.success).toEqual(false);
+  });
+
+  it('should get by id - error', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/a483ab5c-04ae-4486-ac54-1118c2dcd305sfsfsdf2333',
+    });
+
+    const result = response.json();
+
+    expect(result.success).toEqual(false);
   });
 });
