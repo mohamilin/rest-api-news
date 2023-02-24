@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Topic {
+  id String @id @db.Uuid @default(uuid())
+  title String @db.VarChar(255)
+  slug String @db.VarChar(255)
+  articles NewsOnTopics[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("topics")
+}
+
+model News {
+  id String @id @db.Uuid @default(uuid())
+  title String @db.VarChar(255)
+  slug String @db.VarChar(255)
+  content String @db.Text
+  topics NewsOnTopics[]
+  status Status @default(published)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("news")
+
+}
+
+model NewsOnTopics {
+  topics Topic @relation(fields: [topicId], references: [id])
+  topicId String @db.Uuid 
+  article News @relation(fields: [newsId], references: [id])
+  newsId String @db.Uuid
+  assignedAt DateTime @default(now())
+
+  @@id([topicId, newsId])
+}
+
+enum Status {
+  draft
+  deleted
+  published
+}
