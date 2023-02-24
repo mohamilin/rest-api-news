@@ -1,6 +1,11 @@
 import _ from 'lodash';
 import prisma from 'src/utilities/prisma';
-import { newArticleNewsInput, Params, inputUpdateNews } from './schema';
+import {
+  newArticleNewsInput,
+  Params,
+  inputUpdateNews,
+  queryNews,
+} from './schema';
 
 export async function create(input: newArticleNewsInput) {
   const { title, slug, content, topicIds } = input;
@@ -27,13 +32,40 @@ export async function create(input: newArticleNewsInput) {
   return articleNew;
 }
 
-export async function getAll() {
+export async function getAll(query: queryNews) {
+  const { status, topic } = query;
+
   const articleNews = await prisma.news.findMany({
     where: {
-        status: {in: ['draft', 'published']}
+      AND: [
+        {
+          AND: [
+            {
+              status: {
+                equals: status ? status : undefined,
+              },
+            },
+            {
+              topics: {
+                some: {
+                  topics : {
+                    title: {
+                      equals : topic? topic : undefined
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          status: { in: ['draft', 'published'] },
+        },
+      ],
+      
     },
     include: {
-      topics: { include: { topics: true } },
+      topics: {include: {topics: true}}
     },
   });
 
@@ -42,7 +74,7 @@ export async function getAll() {
 
 export async function getById(id: Params) {
   const topic = await prisma.news.findFirst({
-    where: { id: id.newsId, status: {in: ['draft', 'published']} },
+    where: { id: id.newsId, status: { in: ['draft', 'published'] } },
     include: {
       topics: { include: { topics: true } },
     },
@@ -77,14 +109,13 @@ export async function updateNews(id: Params, input: inputUpdateNews) {
   return updatTopic;
 }
 
-export async function deleteNews(id: Params) {  
-    const updatTopic = await prisma.news.update({
-      where: { id: id.newsId },
-      data: {
-        status : 'deleted',
-      },
-    });
-  
-    return updatTopic;
-  }
-  
+export async function deleteNews(id: Params) {
+  const updatTopic = await prisma.news.update({
+    where: { id: id.newsId },
+    data: {
+      status: 'deleted',
+    },
+  });
+
+  return updatTopic;
+}
