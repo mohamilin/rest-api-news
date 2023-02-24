@@ -13,8 +13,8 @@ const server = Fastify({
 
 // Register your application as a normal plugin.
 server.register(app);
-server.register(newsRoutes, { prefix: 'api/news' });
-server.register(topicRoutes, { prefix: 'api/topics' });
+server.register(newsRoutes, { prefix: 'api' });
+server.register(topicRoutes, { prefix: 'api' });
 
 // Start listening.
 server.listen({ port, host }, (err) => {
