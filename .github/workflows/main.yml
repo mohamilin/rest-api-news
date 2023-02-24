@@ -43,7 +43,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: |
+      - name: CI Rest News API
+        run: |
           npm install
           npx prisma migrate dev --name init
           npm run test
+        env: 
+          DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/my-app?schema=public"
