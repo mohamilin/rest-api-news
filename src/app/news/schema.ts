@@ -11,7 +11,7 @@ export type Params = {
   newsId: newsId;
 };
 
-enum statuss {
+enum status {
   draft = 'draft',
   published = 'published',
   deleted = 'deleted',
@@ -20,7 +20,12 @@ enum statuss {
 export type inputUpdateNews = {
   title: string;
   slug: string;
-  status?: statuss;
+  status?: status;
   content: string;
   topicIds: string[];
 };
+
+export type queryNews = {
+  status?: status;
+  topic?: string;
+}
