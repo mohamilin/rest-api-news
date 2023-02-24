@@ -1,22 +1,52 @@
 name: CI Rest News API
 
-on: [pull_request]
+on: push
 
 jobs:
   tests:
     runs-on: ubuntu-latest
-
+        
     strategy:
       matrix:
-        node-version: [18.x, 16.x]
+        node-version:
+        - '16.x'
+        database-name:
+        - my-app
+        database-password:
+        - postgres
+        database-user:
+        - postgres
+        database-host:
+        - 127.0.0.1
+        database-port:
+        - 5432
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ matrix.database-name }}
+          POSTGRES_USER: ${{ matrix.database-user }}
+          POSTGRES_PASSWORD: ${{ matrix.database-password }}
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: CI Rest News API
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install
-        run: npm install
-      - name: start
-        run: npm start
+      - name: Running Installation
+        run: |
+          npm install
+          npx prisma migrate dev --name init
+          npm run test
+        env: 
+          DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/my-app?schema=public"
