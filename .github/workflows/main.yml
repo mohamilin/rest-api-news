@@ -8,7 +8,34 @@ jobs:
         
     strategy:
       matrix:
-        node-version: [18.x, 16.x]
+        node-version:
+        - '12.22'
+        database-name:
+        - my-app
+        database-password:
+        - postgres
+        database-user:
+        - postgres
+        database-host:
+        - 127.0.0.1
+        database-port:
+        - 5432
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ matrix.database-name }}
+          POSTGRES_USER: ${{ matrix.database-user }}
+          POSTGRES_PASSWORD: ${{ matrix.database-password }}
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
@@ -16,8 +43,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm test
-        env: {CI: 'true'}
-      - run: npm run test
-        env: {CI: 'true'}
+      - run: |
+          npm install
+          npx prisma migrate dev --name init
+          npm run test
