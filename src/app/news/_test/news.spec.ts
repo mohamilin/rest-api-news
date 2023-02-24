@@ -9,7 +9,7 @@ describe('Describe for routes news / article of news', () => {
     server.register(newsRoutes);
   });
 
-  it('should create', async () => {
+  it('should create - success', async () => {
     const response = await server.inject({
       method: 'POST',
       url: '/',
@@ -33,6 +33,27 @@ describe('Describe for routes news / article of news', () => {
     expect(result.data).toHaveProperty('slug');
     expect(result.data).toHaveProperty('content');
     expect(result.data).toHaveProperty('status');
+  });
+
+  it('should create - failed', async () => {
+    const response = await server.inject({
+      method: 'POST',
+      url: '/',
+      payload: {
+        title: 12132323,
+        slug: 'sdsdsadsds',
+        content: 'dsdhsbdjhsgdjhsfgjhfgjkfdgsdf',
+        topicIds: [
+          'be950600-997d-404c-ba63-db31d67a6d67',
+          'b418f3a5-98ec-4dd6-bef3-a5555617485b',
+        ],
+      },
+    });
+
+    const result = response.json();
+    console.log(result, 'result');
+    
+    expect(result.success).toEqual(false);
   });
 
   it('should get all news', async () => {
