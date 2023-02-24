@@ -5,6 +5,7 @@ import topicRoutes from '../../topic/route';
 describe('Describe for routes news / article of news', () => {
   let server: FastifyInstance;
   let resultTopic: any;
+  let initiateNews: any;
 
   beforeAll(async () => {
     server = Fastify();
@@ -18,8 +19,21 @@ describe('Describe for routes news / article of news', () => {
         slug: 'sdsdsadsds',
       },
     });
-
     resultTopic = response.json();
+
+    const responseInitiateNews = await topicServer.inject({
+      method: 'POST',
+      url: '/news',
+      payload: {
+        title: 'Article Data',
+        content: 'dsdhsbdjhsgdjhsfgjhfgjkfdgsdf',
+        topicIds: [
+          resultTopic.data.id
+        ],
+      },
+    });
+
+    initiateNews = responseInitiateNews.json();
     
   });
 
@@ -28,15 +42,14 @@ describe('Describe for routes news / article of news', () => {
       method: 'POST',
       url: '/news',
       payload: {
-        title: 'Article Data Satu Oke',
-        slug: 'sdsdsadsds',
+        title: 'Article Data',
         content: 'dsdhsbdjhsgdjhsfgjhfgjkfdgsdf',
         topicIds: [
           resultTopic.data.id
         ],
       },
     });
-
+    
     const result = response.json();
 
     expect(result.success).toEqual(true);
@@ -99,7 +112,7 @@ describe('Describe for routes news / article of news', () => {
   it('should get by id - success', async () => {
     const response = await server.inject({
       method: 'GET',
-      url: '/news/a483ab5c-04ae-4486-ac54-1118c2dcd304',
+      url: `/news/${initiateNews.id}`,
     });
 
     const result = response.json();
