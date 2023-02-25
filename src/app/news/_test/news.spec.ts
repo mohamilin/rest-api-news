@@ -101,7 +101,7 @@ describe('Describe for routes news / article of news', () => {
   it('should get all news - error', async () => {
     const response = await server.inject({
       method: 'GET',
-      url: `/news/?status=${12322}`,
+      url: `/news?status=${50345830573058}`,
     });
 
     const result = response.json();
@@ -112,11 +112,11 @@ describe('Describe for routes news / article of news', () => {
   it('should get by id - success', async () => {
     const response = await server.inject({
       method: 'GET',
-      url: `/news/${initiateNews.id}`,
+      url: `/news/${initiateNews.data.id}`,
     });
 
     const result = response.json();
-
+    
     expect(result).toBeDefined();
 
   });
@@ -142,4 +142,92 @@ describe('Describe for routes news / article of news', () => {
 
     expect(result.success).toEqual(false);
   });
+
+  it('should update - success', async () => {
+    const response = await server.inject({
+      method: 'PUT',
+      url: `/news/${initiateNews.data.id}`,
+      payload: {
+        title: "Data News",
+        content: 'dsdhsbdjhsgdjhsfgjhfgjkfdgsdf',
+        topicIds: [
+          resultTopic.data.id
+        ],
+      }
+    });
+
+    const result = response.json();        
+    expect(result.success).toEqual(true);
+  });
+
+  it('should update - not found id', async () => {
+    const response = await server.inject({
+      method: 'PUT',
+      url: `/news/c7db6039-d33b-4bf8-90f7-93e576197191`,
+      payload: {
+        title: "Data News",
+        content: 'dsdhsbdjhsgdjhsfgjhfgjkfdgsdf',
+        topicIds: [
+          resultTopic.data.id
+        ],
+      }
+    });
+
+    const result = response.json();        
+    expect(result.success).toEqual(false);
+  });
+
+  it('should update - error', async () => {
+    const response = await server.inject({
+      method: 'PUT',
+      url: '/news/a483ab5c-04ae-4486-ac54-1118c2dcd305sfsfsdf2333',
+      payload: {
+        title: 12132323,
+        content: 'dsdhsbdjhsgdjhsfgjhfgjkfdgsdf',
+        topicIds: [
+          'be950600-997d-404c-ba63-db31d67a6d67',
+          'b418f3a5-98ec-4dd6-bef3-a5555617485b',
+        ],
+      }
+    });
+
+    const result = response.json();
+    expect(result.success).toEqual(false);
+  });
+
+  it('should delete - not found id', async () => {
+    const response = await server.inject({
+      method: 'DELETE',
+      url: `/news/c7db6039-d33b-4bf8-90f7-93e576197191`,
+    });
+  
+    const result = response.json();        
+    expect(result.success).toEqual(false);
+  });
+
+  it('should delete - Error', async () => {
+    const response = await server.inject({
+      method: 'DELETE',
+      url: `/news/93e576197191sdasddsd`,
+    });
+  
+    const result = response.json();    
+    console.log(result, 'result delete1');
+        
+    expect(result.success).toEqual(false);
+  });
+
+  it('should delete - Success', async () => {
+    const response = await server.inject({
+      method: 'DELETE',
+      url: `/news/${initiateNews.data.id}`,
+    });
+  
+    const result = response.json();   
+    console.log(result, 'result delete2');
+     
+    expect(result.success).toEqual(true);
+  });
 });
+
+
