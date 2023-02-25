@@ -212,7 +212,6 @@ describe('Describe for routes news / article of news', () => {
     });
   
     const result = response.json();    
-    console.log(result, 'result delete1');
         
     expect(result.success).toEqual(false);
   });
@@ -224,7 +223,6 @@ describe('Describe for routes news / article of news', () => {
     });
   
     const result = response.json();   
-    console.log(result, 'result delete2');
      
     expect(result.success).toEqual(true);
   });
