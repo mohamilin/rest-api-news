@@ -86,7 +86,7 @@ export async function updateHandler(
       data: updateDataNews,
     });
   } catch (e) {
-    return reply.code(500).send(e);
+    return reply.code(500).send({ success: false, message: "Server Error", error: e});
   }
 }
 
@@ -111,6 +111,6 @@ export async function deleteHandler(
       data: '',
     });
   } catch (e) {
-    return reply.code(500).send(e);
+    return reply.code(500).send({ success: false, message: 'Server error', error:e});
   }
 }

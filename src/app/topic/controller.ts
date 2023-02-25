@@ -11,19 +11,19 @@ export async function createHandler(
     const topic = await create(body);
     return reply.code(201).send({ success: true, message: 'Successfuly created', data: topic });
   } catch (e) {
-    return reply.code(500).send(e);
+    return reply.code(500).send({ success: false, message: 'Server Error', error: e});
   }
 }
 
 export async function getAllHandler(
-  request: FastifyRequest<{ Body: newTopicInput }>,
+  request: FastifyRequest,
   reply: FastifyReply
 ) {
   try {
     const topics = await getAll();
     return reply.code(200).send({ success: true, message: 'Successfuly get all topic', data: topics });
   } catch (e) {
-    return reply.code(500).send(e);
+    return reply.code(500).send({ success: false, message: 'Server Error', error: e});
   }
 }
 
@@ -73,7 +73,7 @@ export async function updateHandler(
         data: updateDataTopic,
       });
   } catch (e) {
-    return reply.code(500).send(e);
+    return reply.code(500).send({ success: false, message: 'Server Error', error: e});
   }
 }
 
@@ -96,6 +96,6 @@ export async function deleteHandler(
       .code(200)
       .send({ success: true, message: 'Successfuly deleted', data: deleteDataTopic });
   } catch (e) {
-    return reply.code(500).send(e);
+    return reply.code(500).send({ success: false, message: 'Server Error', error: e});
   }
 }

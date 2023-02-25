@@ -4,14 +4,14 @@ import {createHandler, deleteHandler, getAllHandler, getByIdHandler, updateHandl
 
 async function newsRoutes(server: FastifyInstance) {
     server.post(
-        "/",
+        "/news",
         createHandler
     )
 
-    server.get('/', getAllHandler)
-    server.get('/:newsId', getByIdHandler)
-    server.put('/:newsId', updateHandler);
-    server.delete('/:newsId', deleteHandler)
+    server.get('/news', getAllHandler)
+    server.get('/news/:newsId', getByIdHandler)
+    server.put('/news/:newsId', updateHandler);
+    server.delete('/news/:newsId', deleteHandler)
 
 
 }

@@ -8,6 +8,7 @@ import {
 } from './schema';
 
 export async function create(input: newArticleNewsInput) {
+  input.slug = _.kebabCase(input.title);
   const { title, slug, content, topicIds } = input;
   const inputTopicIdOnNews = topicIds.map((i) => ({
     assignedAt: new Date(),

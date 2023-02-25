@@ -9,12 +9,12 @@ import {
 } from './controller';
 
 async function topicRoutes(server: FastifyInstance) {
-  server.post('/', createHandler);
+  server.post('/topics', createHandler);
 
-  server.get('/', getAllHandler);
-  server.get('/:topicId', getByIdHandler);
-  server.put('/:topicId', updateHandler);
-  server.delete('/:topicId', deleteHandler);
+  server.get('/topics', getAllHandler);
+  server.get('/topics/:topicId', getByIdHandler);
+  server.put('/topics/:topicId', updateHandler);
+  server.delete('/topics/:topicId', deleteHandler);
 }
 
 export default topicRoutes;
